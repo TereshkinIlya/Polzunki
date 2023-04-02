@@ -1,0 +1,59 @@
+﻿<Window x:Class="Polzunki.ColorsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Polzunki ="clr-namespace:Polzunki"
+        mc:Ignorable="d"
+        Title="ColorsWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.Resources>
+            <Polzunki:IntToColorConverter x:Key="colorConverter"/>
+        </Grid.Resources>
+        <CheckBox Name="AlphaCheckBox" Content="Alpha" HorizontalAlignment="Left" Margin="23,17,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Slider IsEnabled="{Binding ElementName=AlphaCheckBox, Path=IsChecked}" Name="AlphaSlider" HorizontalAlignment="Center" Margin="0,16,0,0" VerticalAlignment="Top" Width="562" Maximum="255"/>
+        <CheckBox Name="RedCheckBox" Content="Red" HorizontalAlignment="Left" Margin="23,47,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Slider IsEnabled="{Binding ElementName=RedCheckBox, Path=IsChecked}" Name="RedSlider" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="562" Maximum="255"/>
+        <CheckBox Name="GreenCheckBox" Content="Green" HorizontalAlignment="Left" Margin="23,76,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Slider IsEnabled="{Binding ElementName=GreenCheckBox, Path=IsChecked}" Name="GreenSlider" HorizontalAlignment="Center" Margin="0,74,0,0" VerticalAlignment="Top" Width="562" Maximum="255"/>
+        <CheckBox Name="BlueCheckBox" Content="Blue" HorizontalAlignment="Left" Margin="23,105,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Slider IsEnabled="{Binding ElementName=BlueCheckBox, Path=IsChecked}" Name="BlueSlider" HorizontalAlignment="Center" Margin="0,104,0,0" VerticalAlignment="Top" Width="562" Maximum="255"/>
+        <Button Command="{Binding AddColor}" 
+                CommandParameter="{Binding Path=Background,ElementName=TextBlockColor}" 
+                Content="Add" HorizontalAlignment="Left" Margin="23,143,0,0" 
+                VerticalAlignment="Top" Width="52" FontSize="14" IsEnabled="{Binding NotExist}"/>
+        <TextBlock Text="{Binding Value, ElementName=BlueSlider, StringFormat=\{0:F0\}}" HorizontalAlignment="Left" Margin="84,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock Text="{Binding Value, ElementName=GreenSlider, StringFormat=\{0:F0\}}" HorizontalAlignment="Left" Margin="84,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock Text="{Binding Value, ElementName=RedSlider, StringFormat=\{0:F0\}}" HorizontalAlignment="Left" Margin="84,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock Text="{Binding Value, ElementName=AlphaSlider, StringFormat=\{0:F0\}}" HorizontalAlignment="Left" Margin="84,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock Name="TextBlockColor" HorizontalAlignment="Left" Margin="697,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="103" Width="59">
+            <TextBlock.Background>
+                <MultiBinding Converter="{StaticResource colorConverter}" Mode="OneWay">
+                    <Binding ElementName="AlphaSlider" Path="Value"/>
+                    <Binding ElementName="RedSlider" Path="Value"/>
+                    <Binding ElementName="GreenSlider" Path="Value"/>
+                    <Binding ElementName="BlueSlider" Path="Value"/>
+                </MultiBinding>
+            </TextBlock.Background>
+        </TextBlock>
+        <ListBox ItemsSource="{Binding ColorValues}" SelectedItem="{Binding SelectedColor}" Margin="0,182,0,23" HorizontalAlignment="Center" Width="700">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Delete" Grid.Column="2" 
+                                Command="{Binding DataContext.RemoveColor, 
+                            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}" 
+                                CommandParameter="{Binding}"/>
+                        <TextBlock Grid.Column="0"  Text="{Binding ColorItem}"/>
+                        <TextBlock Grid.Column="1"  Background="{Binding ColorItem}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>
